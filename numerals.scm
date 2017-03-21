@@ -1,6 +1,6 @@
 ; (<Функция> <аргумент1> <аргумент2> ... <аргументn>)
 
-; (define <име> <израз>) 
+; (define <име> <израз>)
 
 ; (lambda (x) <тяло>)
 
@@ -112,7 +112,7 @@
 (define cv
   (lambda (p)
     (p c#t)))
-  
+
 (define printb
   (lambda (b) ((b #t) #f)))
 
@@ -140,3 +140,64 @@
 
 (define printbpair (printpair printb))
 (define printnpair (printpair printn))
+
+(define cp
+  (lambda (n)
+    (ccdr ((n
+            (lambda (p)
+              ((lambda (y)
+                 ((ccons (cs y)) y))
+               (ccar p))))
+            ((ccons c0) c0)))))
+
+(define c!
+  (lambda (n)
+    (ccdr ((n
+            (lambda (p)
+              ((ccons
+                (cs (ccar p)))
+               ((c* (ccdr p))
+                (cs (ccar p))))))
+           ((ccons c0) c1)))))
+
+(define w
+  (lambda (x) (x x)))
+
+; (define omega (w w))
+
+(define Y
+  (lambda (F)
+    (w (lambda (x) (F (x x))))))
+
+;; (define gamma-fib
+;;   (lambda (F)
+;;     (lambda (n)
+;;       (((c=0 n) c0)
+;;        (((c=0 (cp n)) c1)
+;;         ((c+ (F (cp n)))
+;;          (F (cp (cp n)))))))))
+
+(define gamma-fib
+  (lambda (F)
+    (lambda (n)
+      (((c=0 n) c0)
+       (((c=0 (cp n)) c1)
+        (lambda (z)
+          (((c+ (F (cp n)))
+            (F (cp (cp n))))
+           z)))))))
+
+
+; (define fib (Y gamma-fib))
+
+(define (f x y)
+  (if (> x 5) y (+ x 5)))
+
+(define Z
+  (lambda (F)
+    (w
+     (lambda (x) (F (lambda (z) ((x x) z)))))))
+
+(define fib (Z gamma-fib))
+
+; f <-> (lambda (x) (f x))
