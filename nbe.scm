@@ -27,6 +27,7 @@
             (x (gensym 'x))) ; Генерира свежа променлива
         (cons-abs x (reflect sigma (f (reify rho x)))))))
 
+; xi : V -> Л
 (define (modify xi var a)
   (lambda (x)
     (if (eq? x var) a
@@ -45,6 +46,31 @@
            (lambda (a)
              (eval body (modify xi var a)))))))
 
+                                        ; работи само над затворени термове
+                                        ; ако изпълним над отворен терм, тогава нормалната форма няма да е дълга
 (define (nbe M tau)
   (reflect tau (eval M (lambda (x) x))))
 
+(define tn '(arrow (arrow alpha alpha) (arrow alpha alpha)))
+
+(define (repeated n f x)
+  (if (= n 0) x
+      (cons-app f (repeated (- n 1) f x))))
+
+(define (c n)
+  (cons-abs 'f (cons-abs 'x (repeated n 'f 'x))))
+
+(define c+
+  '(lambda (m)
+     (lambda (n)
+       (lambda (f)
+         (lambda (x)
+           ((m f) ((n f) x)))))))
+
+(define c8 (cons-app (cons-app c+ (c 3)) (c 5)))
+
+(define c*
+  '(lambda (m)
+     (lambda (n)
+       (lambda (f)
+         (m (n f))))))
