@@ -67,3 +67,34 @@
 (use "w")
 (use "v")
 (dp (current-proof))
+
+(set-goal (pf "A ord (A -> F)"))
+(use "Stab")
+(assume "u")
+(use "u")
+(intro 1)
+(assume "v")
+(use "u")
+(intro 0)
+(use "v")
+(dp (current-proof))
+(pp (proof-to-expr (current-proof)))
+
+(add-var-name "y" (py "alpha"))
+
+(set-goal (pf "ex x (p(x) -> all x p(x))"))
+(use "Stab") ; Допускаме
+(assume "u") ; Противното
+(use "u")    ; Разлеждаме случаи
+(ex-intro (pt "y")) ; Да си изберем произволно y
+(assume "v" "x") ; p(y) x ; Ако той пие, искаме произволно x също да пие
+(use "Stab")  ; Да допуснем, че
+(assume "w") ; x не пие (противното)
+(use "u")    ; Да, но тогава
+(ex-intro (pt "x")) ; това x, което не пие е контрапример
+(assume "a") ; p(x) ; Понеже ако допуснем, че пие
+(use "Efq")         ; получаваме противоречие
+(use "w")           ; С това, че сме допуснали, че x не пие
+(use "a")           
+(dp (current-proof))
+(pp (proof-to-expr (current-proof)))
